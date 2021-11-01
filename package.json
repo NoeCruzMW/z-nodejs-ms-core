@@ -1,0 +1,33 @@
+{
+  "name": "z-nodejs-core",
+  "version": "1.0.0",
+  "description": "Core layer for fast and productive building of microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node main.js"
+  },
+  "dependencies": {
+    "aws-serverless-express": "^3.4.0",
+    "neo4j-driver": "^4.1.1",
+    "parse-neo4j": "^0.6.11",
+    "tslog": "^3.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "z-nodejs-core"
+  },
+  "keywords": [
+    "core",
+    "layer"
+  ],
+  "author": "Noe Cruz | Zurck'z 21 | https://www.linkedin.com/in/zurckz/",
+  "contributors": [],
+  "homepage": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "typescript": "^4.4.4"
+  }
+}
