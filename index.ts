@@ -1,10 +1,12 @@
-import { Neo, NeoConnectionData, zL } from "./src/infraestructure";
-import { getEnv, getEnvOrThrow } from "./src/shared";
+export * from "./src/application";
+export * from "./src/domain";
+export * from "./src/infraestructure";
 
-export = {
-  Neo,
-  NeoConnectionData,
-  getEnv,
-  getEnvOrThrow,
-  zL
-};
+/**
+ * Utils and share helper functions
+ */
+export * from "./src/shared";
+/**
+ * External
+ */
+export * from "neo4j-driver";

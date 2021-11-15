@@ -8,7 +8,19 @@
 export const getEnv = (key: string): string | undefined => {
   return process.env[key];
 };
-
+/**
+ * Retrieve a value of the environment variable with key provided
+ * @param key value of key
+ * @param value default value if the key does not exist
+ * @returns string value or undefined if the key does not exist
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ */
+export const getEnvOr = (key: string, value: string): string => {
+  const _value = process.env[key];
+  if (value === undefined) return value;
+  return process.env[key]!;
+};
 /**
  * Retrieve a value of the environment variable with key provided
  * @param key value of key

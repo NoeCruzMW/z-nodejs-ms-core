@@ -1,5 +1,5 @@
 import * as neo4j from "neo4j-driver";
-import { Driver } from "neo4j-driver-core";
+import { Driver, Session } from "neo4j-driver-core";
 import { zL } from "./../../logging";
 import { NeoConnectionData } from "./NeoConnectionData";
 const parser = require("parse-neo4j");
@@ -16,7 +16,24 @@ export class Neo {
   private neoConnectionData: NeoConnectionData | null = null;
 
   private constructor() {}
-
+  /**
+   * Setup Connection data from environment variables value
+   *
+   * Shuld be set the next variables
+   *
+   * neoReaderUri: URI of reader node
+   * neoWriterUri: URI of writer node
+   * neoUser: User for authentication
+   * newPassword: Password for authentication
+   */
+  public setupFromEnv() {
+    this.setupConnection(
+      process.env.neoReaderUri!,
+      process.env.neoWriterUri!,
+      process.env.neoUser!,
+      process.env.neoPassword!
+    );
+  }
   /**
    *  Setup connection data
    * @param readerUri  Uri of reader node
@@ -121,5 +138,65 @@ export class Neo {
    */
   public async parse(data: any) {
     return await parser.parse(data);
+  }
+  /**
+   * Run single query and parse raw data
+   * @param session Opened Session
+   * @param query String query
+   * @param params Optional params
+   * @returns json result
+   * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+   */
+  public static async run(
+    session: Session,
+    query: string,
+    params?: any
+  ): Promise<any[]> {
+    const rawData = await session.readTransaction((tx: any) =>
+      tx.run(query, params)
+    );
+    return await Neo.getInstance().parse(rawData);
+  }
+  /**
+   * Run single cypher query auto manage session and apply transformation to result
+   * @param consumer tranformation
+   * @param query raw query
+   * @param params optional params
+   * @returns list of T
+   * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+   */
+  public static async runAnd<T>(
+    consumer: (i: any) => Promise<T>,
+    query: string,
+    params?: any
+  ): Promise<T[]> {
+    const reader = await Neo.getInstance().getReader();
+    const session = reader.session();
+    try {
+      return await Promise.all(
+        (
+          await Neo.run(session, query, params)
+        )?.map(async (rp) => await consumer(rp))
+      );
+    } finally {
+      await session.close();
+    }
+  }
+  /**
+   * Run single cypher query auto manage session
+   * @param consumer tranformation
+   * @param query raw query
+   * @param params optional params
+   * @returns list of T
+   * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+   */
+  public static async runSQ<T>(query: string, params?: any): Promise<T[]> {
+    const reader = await Neo.getInstance().getReader();
+    const session = reader.session();
+    try {
+      return await Neo.run(session, query, params);
+    } finally {
+      await session.close();
+    }
   }
 }

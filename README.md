@@ -22,7 +22,7 @@ Install package
 
 ```bash
 
-npm install
+npm i @zurckz/nodejs-ms-core
 
 ```
 
@@ -33,7 +33,7 @@ npm install
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see
-the [tags on this repository](https://github.com/NoeCruzMW/z-nodejs-ms-core/CHANGELOG.md)
+the [tags on this repository](https://github.com/NoeCruzMW/z-nodejs-ms-core/blob/main/CHANGELOG.md)
 .
 
 ## Authors
