@@ -70,26 +70,59 @@ export class SQSApp {
     this.onEvent = onEvent;
   }
 
-  proccess(event: SQSEvent): any {
+  async proccess(event: SQSEvent): Promise<any> {
     try {
-      this.onEvent && this.onEvent(event);
-      this.onRecords && this.onRecords(event.Records);
+      this.onEvent && (await this.onEvent(event));
+      this.onRecords && (await this.onRecords(event.Records));
       if (this.onRecord) {
-        event.Records.forEach((r) => {
-          this.onRecord!(r);
+        event.Records.forEach(async (r) => {
+          try {
+            await this.onRecord!(r);
+          } catch (error) {
+            zL.fatal(
+              "An errror ocurred when try proccess the record: " +
+                JSON.stringify(r)
+            );
+            zL.fatal(error);
+          }
         });
       }
     } catch (error) {
+      zL.fatal(
+        "An errror ocurred when try proccess the event: " +
+          JSON.stringify(event)
+      );
       zL.fatal(error);
     }
     return "OK";
   }
 
-  static proxy(app: SQSApp, event: SQSEvent): any {
-    if (app.onEvent == null && app.onRecord == null && app.OnRecords == null)
+  async test(absFilePath: string) {
+    try {
+      if (
+        this.onEvent == null &&
+        this.onRecord == null &&
+        this.onRecords == null
+      )
+        zL.warn(
+          "SQS records callbacks handlers not found, at least one must be registered!"
+        );
+      const fs = require("fs");
+      const result = await this.proccess(
+        JSON.parse(fs.readFileSync(absFilePath, "utf8"))
+      );
+      zL.info("Result: ");
+      zL.debug(result);
+    } catch (error) {
+      zL.fatal(error);
+    }
+  }
+
+  static async proxy(app: SQSApp, event: SQSEvent): Promise<any> {
+    if (app.onEvent == null && app.onRecord == null && app.onRecords == null)
       zL.warn(
         "SQS records callbacks handlers not found, at least one must be registered!"
       );
-    return app.proccess(event);
+    return await app.proccess(event);
   }
 }

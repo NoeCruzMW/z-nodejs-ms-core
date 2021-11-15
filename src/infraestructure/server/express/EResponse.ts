@@ -2,6 +2,14 @@ import { Request, Response } from "express";
 import { zL } from "../..";
 import { HttpCodes, SuccessHttpResponse, ZHttpError } from "../../../domain";
 
+const extractRequestId = (request: any) => {
+  let requestId = "-";
+  try {
+    requestId = request.apiGateway.context.awsRequestId;
+  } catch (error) {}
+  return requestId;
+};
+
 /**
  * Build success response
  * @param request Express request
@@ -15,15 +23,12 @@ export const BSuccess = (
   response: Response,
   successEvent: SuccessHttpResponse<any>
 ) => {
-  try {
-    zL.info(`Aws requesId: ${request.apiGateway.event}`);
-  } catch (error) {}
   response?.status(successEvent.code).json({
     message:
       successEvent.shortMessage && successEvent.shortMessage != ""
         ? successEvent.shortMessage
         : successEvent.httpCode.description,
-    requestId: "xxx-xxx-xxx-xx",
+    requestId: extractRequestId(request),
     result: successEvent.value,
   });
 };
@@ -41,16 +46,14 @@ export const BError = (
   response: Response,
   error: any
 ) => {
-  try {
-    zL.info(`Aws requesId: ${JSON.stringify(request.apiGateway.event)}`);
-  } catch (error) {}
+  let requestId = extractRequestId(request);
   if (error instanceof ZHttpError) {
     zL.error(error);
     const code = error.httpCode;
     response?.status(code.code).json({
       message: code.message,
       description: code.description,
-      requestId: "xxx-xxx-xxx-xx",
+      requestId: requestId,
       details: error.errorDetails,
     });
   } else {
@@ -59,7 +62,7 @@ export const BError = (
     response?.status(code.code).json({
       message: code.message,
       description: code.description,
-      requestId: "xxx-xxx-xxx-xx",
+      requestId: requestId,
       details: null,
     });
   }
