@@ -176,6 +176,7 @@ export class EApp {
       consumer: (e: Express) => {
         morganBody(e, {
           noColors: true,
+          prettify: false
         });
       },
     },

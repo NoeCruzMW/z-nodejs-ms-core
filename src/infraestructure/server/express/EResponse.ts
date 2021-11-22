@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import { zL } from "../..";
 import { HttpCodes, SuccessHttpResponse, ZHttpError } from "../../../domain";
-
+/**
+ * Request id extractor
+ * @param request express request
+ * @returns
+ */
 const extractRequestId = (request: any) => {
   let requestId = "-";
   try {
@@ -18,7 +22,7 @@ const extractRequestId = (request: any) => {
  * @author @author Noé Cruz | https://www.linkedin.com/in/zurckz/
  * @version 1.0.0
  */
-export const BSuccess = (
+export const ok = (
   request: Request | any,
   response: Response,
   successEvent: SuccessHttpResponse<any>
@@ -41,7 +45,7 @@ export const BSuccess = (
  * @author @author Noé Cruz | https://www.linkedin.com/in/zurckz/
  * @version 1.0.0
  */
-export const BError = (
+export const error = (
   request: Request | any,
   response: Response,
   error: any

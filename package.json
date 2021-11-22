@@ -1,6 +1,6 @@
 {
   "name": "@zurckz/nodejs-ms-core",
-  "version": "1.0.4",
+  "version": "1.0.10",
   "description": "Core layer for fast and productive building of microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

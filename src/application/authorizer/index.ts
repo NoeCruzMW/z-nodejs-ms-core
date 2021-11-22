@@ -45,6 +45,12 @@ export interface AuthManager {
   addFilters(filters: AuthFilter[]): void;
 }
 
+/**
+ * GenericAuthManager
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ *
+ */
 export class GenericAuthManager implements AuthManager {
   filters: AuthFilter[];
   constructor(filters: AuthFilter[]) {

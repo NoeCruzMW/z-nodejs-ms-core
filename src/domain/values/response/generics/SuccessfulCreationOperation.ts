@@ -1,5 +1,10 @@
 import { HttpCodes, SuccessHttpResponse } from "..";
-
+/**
+ * ZCreatedResponse
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ *
+ */
 export class ZCreatedResponse<T> extends SuccessHttpResponse<T> {
   private constructor(msg: string, data: T) {
     super(msg, data, HttpCodes.CREATED);

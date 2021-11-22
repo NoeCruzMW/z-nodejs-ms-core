@@ -1,6 +1,11 @@
 import { BadRequest } from "../../domain";
 import { getOrNull } from "../../shared";
-
+/**
+ * ZBRequest
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ *
+ */
 export abstract class ZBRequest {
   public toJson(): {} {
     return JSON.parse(JSON.stringify(this));

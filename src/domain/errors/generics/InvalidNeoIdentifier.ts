@@ -1,6 +1,12 @@
 import { HttpCodes } from "../..";
 import { ZHttpError } from "../ZError";
 
+/**
+ * ResourceNotFound
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ *
+ */
 export class ResourceNotFound extends ZHttpError {
   constructor(msg: string, detail?: string) {
     super(msg, HttpCodes.NOT_FOUND);
@@ -9,7 +15,12 @@ export class ResourceNotFound extends ZHttpError {
     }
   }
 }
-
+/**
+ * BadRequest
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ *
+ */
 export class BadRequest extends ZHttpError {
   constructor(msg: string, detail?: string[]) {
     super(msg, HttpCodes.BAD_REQUEST);
@@ -18,7 +29,12 @@ export class BadRequest extends ZHttpError {
     }
   }
 }
-
+/**
+ * Forbidden
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ *
+ */
 export class Forbidden extends ZHttpError {
   constructor(msg: string, detail?: string[]) {
     super(msg, HttpCodes.FORBIDDEN);

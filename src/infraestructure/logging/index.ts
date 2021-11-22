@@ -5,6 +5,6 @@ import { Logger } from "tslog";
  */
 export const zL: Logger = new Logger({
   name: "Zurck'z - L",
-  colorizePrettyLogs: true,
+  colorizePrettyLogs: false,
   displayInstanceName: true,
 });

@@ -38,7 +38,11 @@ export interface SQSRecord {
 export interface SQSEvent {
   Records: SQSRecord[];
 }
-
+/**
+ * AWS SQS Hanlder
+ * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
+ * @version 1.0.0
+ */
 export class SQSApp {
   onRecord: ((record: SQSRecord) => void) | null | undefined = null;
   onRecords: ((records: SQSRecord[]) => void) | null | undefined = null;
@@ -70,33 +74,48 @@ export class SQSApp {
     this.onEvent = onEvent;
   }
 
+  /**
+   * Process the sqs event passed to callbacks configured.
+   * Return an explicit string for avoid re enqueue.
+   *
+   * In futures version you can change this behavior. 🤗
+   *
+   * @param event SQS event
+   * @returns result of process
+   */
   async proccess(event: SQSEvent): Promise<any> {
+    zL.info("Initializing processing...");
     try {
       this.onEvent && (await this.onEvent(event));
       this.onRecords && (await this.onRecords(event.Records));
       if (this.onRecord) {
-        event.Records.forEach(async (r) => {
+        for (const record of event.Records) {
           try {
-            await this.onRecord!(r);
+            await this.onRecord!(record);
           } catch (error) {
             zL.fatal(
-              "An errror ocurred when try proccess the record: " +
-                JSON.stringify(r)
+              `An errror ocurred when try proccess the record: ${JSON.stringify(
+                record
+              )}`,
+              error
             );
-            zL.fatal(error);
           }
-        });
+        }
       }
     } catch (error) {
       zL.fatal(
-        "An errror ocurred when try proccess the event: " +
-          JSON.stringify(event)
+        `An errror ocurred when try proccess the event: ${JSON.stringify(
+          event
+        )}`,
+        error
       );
-      zL.fatal(error);
     }
-    return "OK";
+    return "Processing completed!";
   }
-
+  /**
+   * Simulates the processing of an sqs event without running local containers
+   * @param absFilePath absolute file with json sqs event
+   */
   async test(absFilePath: string) {
     try {
       if (
@@ -111,13 +130,17 @@ export class SQSApp {
       const result = await this.proccess(
         JSON.parse(fs.readFileSync(absFilePath, "utf8"))
       );
-      zL.info("Result: ");
-      zL.debug(result);
+      zL.info("Result: ", result);
     } catch (error) {
       zL.fatal(error);
     }
   }
-
+  /**
+   * Configure SQS Handler
+   * @param app SQS Hanlder
+   * @param event  SQS Event
+   * @returns for now explicit string 😁
+   */
   static async proxy(app: SQSApp, event: SQSEvent): Promise<any> {
     if (app.onEvent == null && app.onRecord == null && app.onRecords == null)
       zL.warn(

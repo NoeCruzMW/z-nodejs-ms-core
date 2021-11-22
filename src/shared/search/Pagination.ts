@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import { zL } from "../../infraestructure";
 import { ZPage } from "../../domain";
 /**
- * Pagination
+ * Custom Pagination
  * @author Noé Cruz | https://www.linkedin.com/in/zurckz/
  * @version 1.0.0
  *
@@ -49,7 +49,11 @@ export class Pagination {
     const _size = size ? size : Pagination.defaultSize;
     return new Pagination(_size, 0, _size);
   }
-
+  /**
+   * build pagination from raw key
+   * @param key raw string key
+   * @returns Pagination instance
+   */
   public static fromRawKey(key: string): Pagination {
     /**
      *  low-high-size
@@ -113,7 +117,12 @@ export class SearchQuery {
     pageData: Pagination,
     whoSearchRequestedId: string | number
   ): SearchQuery {
-    return new SearchQuery(pageData, "", whoSearchRequestedId, whoSearchRequestedId);
+    return new SearchQuery(
+      pageData,
+      "",
+      whoSearchRequestedId,
+      whoSearchRequestedId
+    );
   }
 
   public get pagination(): Pagination {

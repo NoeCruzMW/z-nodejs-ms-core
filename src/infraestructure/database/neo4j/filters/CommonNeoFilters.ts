@@ -31,7 +31,11 @@ export class ExistResourceFilter implements AuthFilter {
   constructor(options: FilterOptions) {
     this.options = options;
   }
-
+  /**
+   *
+   * @param label
+   * @param data
+   */
   private async _verify(label: string, data: number | string) {
     const result = await Neo.runSQ<any>(
       `match (u: ${label}) where id(u) = ${data} return u`
@@ -42,7 +46,11 @@ export class ExistResourceFilter implements AuthFilter {
       throw new ResourceNotFound(commonMessage, commonMessage);
     }
   }
-
+  /**
+   * Verify the request provided
+   * @param request
+   * @returns true or false
+   */
   async verify(request: ZRequest): Promise<boolean> {
     if (this.options.verifyTarget) {
       await this._verify(this.options.labelTarget!, request.searchTarget);
